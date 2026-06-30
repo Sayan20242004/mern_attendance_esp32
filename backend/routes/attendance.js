@@ -3,7 +3,6 @@ const router = express.Router();
 const Attendance = require("../models/Attendance");
 const axios = require("axios");
 
-// ESP32 sends image here
 router.post("/", async (req, res) => {
   const imageBuffer = req.body;
 
@@ -33,7 +32,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// GET attendance
 router.get("/", async (req, res) => {
   const data = await Attendance.find().sort({ timestamp: -1 });
   res.json(data);
