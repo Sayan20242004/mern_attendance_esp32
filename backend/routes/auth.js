@@ -3,11 +3,11 @@ const router = express.Router();
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-//const mongoose = require("mongoose");  // ⭐ ADD THIS
+//const mongoose = require("mongoose");
 
 const SECRET = "secret123";
 
-// REGISTER
+
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password, imagePath, vector } = req.body;
@@ -22,8 +22,8 @@ router.post("/register", async (req, res) => {
       name,
       email,
       password: hash,
-      imagePath: imagePath || "",  // optional
-      vector: vector || []         // optional
+      imagePath: imagePath || "",  
+      vector: vector || []         
     });
 
     res.json({ userId: user._id });
