@@ -8,22 +8,16 @@ from pymongo import MongoClient
 app = Flask(__name__)
 CORS(app)
 
-# ✅ MongoDB connection
+
 client = MongoClient(os.getenv("MONGO_URI"))
 db = client["sample-db"]
 users_col = db["users"]
 
-# =========================
-# ✅ VECTOR GENERATION
-# =========================
-def generate_vector(img):
-    resized = cv2.resize(img, (100, 100))   # 100x100
-    vector = resized.flatten() / 255.0      # normalize
-    return vector
 
-# =========================
-# ✅ COSINE SIMILARITY (SAFE)
-# =========================
+def generate_vector(img):
+    resized = cv2.resize(img, (100, 100))   
+    vector = resized.flatten() / 255.0      
+    return vector
 def cosine_similarity(a, b):
     norm_a = np.linalg.norm(a)
     norm_b = np.linalg.norm(b)
@@ -33,9 +27,6 @@ def cosine_similarity(a, b):
 
     return np.dot(a, b) / (norm_a * norm_b)
 
-# =========================
-# ✅ REGISTER (FRONTEND)
-# =========================
 @app.route("/register-face", methods=["POST"])
 def register_face():
     data = request.json
@@ -65,13 +56,10 @@ def register_face():
         return jsonify({"error": str(e)}), 500
 
 
-# =========================
-# ✅ RECOGNIZE (ESP32)
-# =========================
 @app.route("/recognize", methods=["POST"])
 def recognize():
     try:
-        # 🔥 RAW image from ESP32
+        
         img_data = request.data
         np_arr = np.frombuffer(img_data, np.uint8)
         img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
@@ -90,13 +78,13 @@ def recognize():
         best_score = -1
 
         for user in users:
-            # ✅ Skip invalid users
+            
             if "vector" not in user or len(user["vector"]) == 0:
                 continue
 
             db_vector = np.array(user["vector"])
 
-            # ✅ Shape check
+            
             if db_vector.shape != vector.shape:
                 print("Skipping user due to shape mismatch")
                 continue
@@ -107,7 +95,7 @@ def recognize():
                 best_score = score
                 best_match = user
 
-        # 🔴 THRESHOLD (tune this if needed)
+        
         if best_match and best_score > 0.75:
             return jsonify({
                 "userId": str(best_match["_id"]),
@@ -121,12 +109,9 @@ def recognize():
         })
 
     except Exception as e:
-        print("🔥 RECOGNIZE ERROR:", str(e))
+        print(" RECOGNIZE ERROR:", str(e))
         return jsonify({"error": str(e)}), 500
 
 
-# =========================
-# ✅ RUN SERVER
-# =========================
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
