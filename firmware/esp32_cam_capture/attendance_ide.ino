@@ -2,20 +2,12 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-// =====================
-// WiFi Credentials
-// =====================
+
 const char* ssid = "YOUR_WIFI_SSID";
 const char* password = "YOUR_WIFI_PASSWORD";
 
-// =====================
-// Node Backend URL
-// =====================
 const char* serverURL = "http://YOUR_PC_IP:5000/api/attendance";
 
-// =====================
-// AI Thinker ESP32-CAM Pins
-// =====================
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
@@ -35,9 +27,6 @@ const char* serverURL = "http://YOUR_PC_IP:5000/api/attendance";
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
-// =====================
-// Camera Initialization
-// =====================
 void startCamera() {
 
   camera_config_t config;
@@ -83,9 +72,6 @@ void startCamera() {
   Serial.println("Camera Ready");
 }
 
-// =====================
-// Setup
-// =====================
 void setup() {
 
   Serial.begin(115200);
@@ -107,9 +93,6 @@ void setup() {
   startCamera();
 }
 
-// =====================
-// Loop
-// =====================
 void loop() {
 
   if (WiFi.status() == WL_CONNECTED) {
