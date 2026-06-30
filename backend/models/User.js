@@ -5,8 +5,8 @@ const UserSchema = new mongoose.Schema({
   email: String,
   password: String,
   role: { type: String, default: "user" },
-  imagePath: String,     // optional: path/URL to stored profile image
-  vector: [Number]       // store Python-generated vector
+  imagePath: String,     
+  vector: [Number]       
 });
 
 module.exports = mongoose.model("User", UserSchema);
